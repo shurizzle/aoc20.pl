@@ -93,7 +93,14 @@ is_alpha(C) :- code_type(C, alpha).
 % }}}
 
 % util {{{
-minus(A,B,C) :- C is B-A.
+minus(A,B,C) :-
+  (
+     var(A)
+  -> A is B+C
+  ;  var(B)
+  -> B is A-C
+  ;  C is A-B
+  ).
 
 range(Start, Start, _, Value) :- !, Value is Start.
 range(Start, _, _, Value) :- Value is Start.
