@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
-cat <<EOF > "$(dirname "$(readlink -f "$0")")/src/$1.pl"
+BASE="$(dirname "$(readlink -f "$0")")"
+INPUT="$BASE/inputs/$1.txt"
+FILE="$BASE/src/$1.pl"
+
+if ! test -f "$INPUT"; then
+  touch "$INPUT"
+fi
+
+if ! test -f "$FILE"; then
+  cat <<EOF > "$FILE"
 :- [prelude].
 
 input_file("inputs/$1.txt").
@@ -28,3 +37,4 @@ line(I) --> var(I), !.
 part1(Data, Res) :- nonvar(Data), var(Res).
 part2(Data, Res) :- nonvar(Data), var(Res).
 EOF
+fi
