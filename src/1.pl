@@ -30,13 +30,6 @@ test_from_string(Input) :- input_from_string(Input, Data), test(Data).
 test :- tinput(Input), test_from_string(Input).
 % }}}
 
-mul_list([], Res, Res).
-mul_list([X|Xs], Acc0, Res) :-
-  Acc is Acc0 * X,
-  mul_list(Xs, Acc, Res).
-mul_list([X|Xs], Res) :-
-  mul_list(Xs, X, Res).
-
 solve0(Data, N, Res) :-
   combinations(Data, N, List),
   sum_list(List, 2020), !,

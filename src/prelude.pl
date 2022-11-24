@@ -124,4 +124,11 @@ combinations(List, Len, Value) :-
   Len =< Max0,
   Max is Max0-1,
   combinations0(List, 0, Max, Len, [], Value).
+
+mul_list([], Res, Res).
+mul_list([X|Xs], Acc0, Res) :-
+  Acc is Acc0 * X,
+  mul_list(Xs, Acc, Res).
+mul_list([X|Xs], Res) :-
+  mul_list(Xs, X, Res).
 % }}}
