@@ -32,14 +32,17 @@ line(Res) -->
   letters(P),
   { Res = (Start, Stop, C, P) }.
 
-filtercount(_, [], 0) :- !.
-filtercount(Filter, [X|Xs], Count) :-
+filtercount(_, [], Count, Count) :- !.
+filtercount(Filter, [X|Xs], C0, Count) :-
   (
-     call(Filter, X)
-  -> filtercount(Filter, Xs, C0),
-     Count is C0+1
-  ;  filtercount(Filter, Xs, Count)
-  ).
+      call(Filter, X)
+  ->  C1 is C0+1
+  ;   C1 is C0
+  ),
+  filtercount(Filter, Xs, C1, Count).
+
+filtercount(Filter, List, Count) :-
+  filtercount(Filter, List, 0, Count).
 
 part1(Data, Res) :-
   filtercount([(R1, R2, C, S)]>>(
@@ -50,12 +53,10 @@ part1(Data, Res) :-
   ), Data, Res).
 
 part2(Data, Res) :-
-  filtercount([(R10, R20, C, S)]>>(
-    R1 is R10-1,
-    R2 is R20-1,
+  filtercount([(R1, R2, C, S)]>>(
     string_chars(S, Cs),
-    nth0(R1, Cs, C1),
-    nth0(R2, Cs, C2),
+    nth1(R1, Cs, C1),
+    nth1(R2, Cs, C2),
     C1 \= C2,
     (C1 = C; C2 = C)
   ), Data, Res).

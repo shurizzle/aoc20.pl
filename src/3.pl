@@ -39,19 +39,21 @@ advance(IncX, IncY, X0, Y0, X, Y) :-
   X is X0+IncX,
   Y is Y0+IncY.
 
-count_trees(Matrix, Width, Advance, X0, Y0, Count) :-
+count_trees(Matrix, Width, Advance, X0,Y0, C0, Count) :-
   nth0(Y0, Matrix, Line),
   nth0(X0, Line, Square), !,
   (
-     Square == true
-  -> Inc is 1
-  ;  Inc is 0
+      Square == true
+  ->  C1 is C0+1
+  ;   C1 is C0
   ),
   call(Advance, X0, Y0, X1, Y),
   X is X1 mod Width,
-  count_trees(Matrix, Width, Advance, X, Y, Count0),
-  Count is Count0+Inc.
-count_trees(_, _, _, _, _, 0).
+  count_trees(Matrix, Width, Advance, X,Y, C1, Count).
+count_trees(_, _, _, _, _, Count, Count).
+
+count_trees(Matrix, Width, Advance, X0,Y0, Count) :-
+  count_trees(Matrix, Width, Advance, X0,Y0, 0, Count).
 
 part1(Data, Res) :-
   nth0(0, Data, Line0),
