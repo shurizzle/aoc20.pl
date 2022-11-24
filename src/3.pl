@@ -2,6 +2,7 @@
 
 input_file("inputs/3.txt").
 
+% tests {{{
 tinput("..##.......
 #...#...#..
 .#....#..#.
@@ -25,6 +26,7 @@ test2 :- tinput(Data), test2_from_string(Data).
 test(Data) :- test1(Data), test2(Data).
 test_from_string(Input) :- input_from_string(Input, Data), test(Data).
 test :- tinput(Input), test_from_string(Input).
+% }}}
 
 print1(Res) :- print(Res).
 print2(Res) :- print(Res).
@@ -52,8 +54,8 @@ count_trees(Matrix, Width, Advance, X0,Y0, C0, Count) :-
   count_trees(Matrix, Width, Advance, X,Y, C1, Count).
 count_trees(_, _, _, _, _, Count, Count).
 
-count_trees(Matrix, Width, Advance, X0,Y0, Count) :-
-  count_trees(Matrix, Width, Advance, X0,Y0, 0, Count).
+count_trees(Matrix, Width, Advance, X,Y, Count) :-
+  count_trees(Matrix, Width, Advance, X,Y, 0, Count).
 
 part1(Data, Res) :-
   nth0(0, Data, Line0),
