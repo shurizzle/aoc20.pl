@@ -1,4 +1,3 @@
-:- use_module(library(lists)).
 :- [prelude].
 
 input_file("inputs/1.txt").
