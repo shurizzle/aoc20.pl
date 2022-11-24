@@ -25,7 +25,7 @@ test :- tinput(Input), test_from_string(Input).
 print1(Res) :- print(Res).
 print2(Res) :- print(Res).
 
-parse(Lines) --> list_of(trim_line(line), Lines).
+parse(Ls) --> list_of(L, trim_line(line(L)), Ls).
 line(Res) -->
   integer(Start), "-", integer(Stop),
   white, whites,

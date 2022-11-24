@@ -31,11 +31,10 @@ test :- tinput(Input), test_from_string(Input).
 print1(Res) :- print(Res).
 print2(Res) :- print(Res).
 
-parse(Lines) --> list_of(raw_line(line), Lines), blanks.
-line([S|Ss]) --> square(S), !, list_of(square, Ss).
-square(X) --> free_square(X); tree_square(X).
-free_square(false) --> ".".
-tree_square(true) --> "#".
+parse(Ls) --> list_of(L, raw_line(line(L)), Ls).
+line(Ss) --> list_of(S, square(S), Ss).
+square(false) --> ".".
+square(true) --> "#".
 
 advance(IncX, IncY, X0, Y0, X, Y) :-
   X is X0+IncX,

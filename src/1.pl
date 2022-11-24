@@ -5,7 +5,7 @@ input_file("inputs/1.txt").
 print1(Res) :- print(Res).
 print2(Res) :- print(Res).
 
-parse(Lines) --> list_of(trim_line(integer), Lines).
+parse(Is) --> list_of(I, trim_line(integer(I)), Is).
 
 % tests {{{
 tinput("

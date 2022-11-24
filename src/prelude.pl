@@ -59,22 +59,21 @@ solution :- input(Data), solution_from_data(Data).
 % }}}
 
 % parsing {{{
-raw_line(Fn) --> call(Fn), eol, !.
-raw_line(Fn) --> call(Fn), eos.
-
-raw_line(Fn, X) --> call(Fn, X), eol, !.
-raw_line(Fn, X) --> call(Fn, X), eos.
+raw_line(Fn) --> call(Fn), eol.
 
 trim_line(Fn) --> blanks, call(Fn), blanks, eos, !.
 trim_line(Fn) --> blanks, call(Fn), blanks_to_nl.
 
-trim_line(Fn, X) --> blanks, call(Fn, X), blanks, eos, !.
-trim_line(Fn, X) --> blanks, call(Fn, X), blanks_to_nl.
+list_of(_, _, []) --> eos, !.
+list_of(Templ, Term0, [X|Xs], Codes, Rest) :-
+  copy_term_nat(Templ, X),
+  term_variables(Term0, Vars0),
+  exclude(==(Templ), Vars0, Vars),
+  copy_term(Templ^Vars^Term0, X^Vars^Term),
 
-list_of(Fn, [X|Xs]) -->
-  call(Fn, X), !,
-  list_of(Fn, Xs).
-list_of(_, []) --> [].
+  call_dcg(Term, Codes, C0), !,
+  list_of(Templ, Term0, Xs, C0, Rest).
+list_of(_, _, []) --> [].
 
 parse_string(IsValid, Cs) -->
   parse_string_character(IsValid, C0), !,
