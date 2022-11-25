@@ -31,7 +31,7 @@ test :- tinput(Input), test_from_string(Input).
 print1(Res) :- print(Res).
 print2(Res) :- print(Res).
 
-parse(Lines) --> parse_lines(Lines).
+parse(Lines) --> list_of(L, raw_line(line(L)), Lines).
 line(I) --> var(I), !.
 
 part1(Data, Res) :- nonvar(Data), var(Res).
