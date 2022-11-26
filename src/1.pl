@@ -30,6 +30,7 @@ test_from_string(Input) :- input_from_string(Input, Data), test(Data).
 test :- tinput(Input), test_from_string(Input).
 % }}}
 
+% non unique values solution
 solve0(Data, N, Res) :-
   length(Is, N),
   length(Data, L),
@@ -41,5 +42,21 @@ solve0(Data, N, Res) :-
   label(Xs), !,
   mul_list(Xs, Res).
 
-part1(Data, Res) :- solve0(Data, 2, Res).
-part2(Data, Res) :- solve0(Data, 3, Res).
+foldl1(Goal, [X|Xs], V) :-
+  foldl(Goal, Xs, X, V).
+
+% unique values solution
+solve1(Data, N, Res) :-
+  length(Data, L),
+  L >= N,
+  maplist([X,X..X]>>(true), Data, Domains),
+  foldl1([A,B,A\/B]>>(true), Domains, Domain),
+  length(Xs, N),
+  Xs ins Domain,
+  all_distinct(Xs),
+  sum(Xs, #=, 2020),
+  label(Xs), !,
+  mul_list(Xs, Res).
+
+part1(Data, Res) :- solve1(Data, 2, Res).
+part2(Data, Res) :- solve1(Data, 3, Res).
