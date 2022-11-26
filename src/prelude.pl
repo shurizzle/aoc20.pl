@@ -103,36 +103,6 @@ minus(A,B,C) :-
   ;  C is A-B
   ).
 
-range(Start, Start, _, Value) :- !, Value is Start.
-range(Start, _, _, Value) :- Value is Start.
-range(Start, Stop, Step, Value) :-
-  call(Step, Start, Start0),
-  range(Start0, Stop, Step, Value).
-
-range(Start, Stop, Value) :-
-  Start =< Stop, !,
-  range(Start, Stop, plus(1), Value).
-range(Start, Stop, Value) :-
-  range(Start, Stop, minus(1), Value).
-
-combinations0(_, _, _, 0, V, V) :- !.
-combinations0(List, Start0, Max, N0, T0, Value) :-
-  N0 > 0,
-  N is N0-1,
-  Stop is Max-N,
-  range(Start0, Stop, I),
-  nth0(I, List, V),
-  Start is Start0+1,
-  append(T0, [V], T),
-  combinations0(List, Start, Max, N, T, Value).
-
-combinations(List, Len, Value) :-
-  Len > 0,
-  length(List, Max0),
-  Len =< Max0,
-  Max is Max0-1,
-  combinations0(List, 0, Max, Len, [], Value).
-
 mul_list([], Res, Res).
 mul_list([X|Xs], Acc0, Res) :-
   Acc is Acc0 * X,

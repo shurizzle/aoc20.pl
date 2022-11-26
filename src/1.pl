@@ -1,4 +1,5 @@
 :- [prelude].
+:- use_module(library(clpfd)).
 
 input_file("inputs/1.txt").
 
@@ -30,9 +31,15 @@ test :- tinput(Input), test_from_string(Input).
 % }}}
 
 solve0(Data, N, Res) :-
-  combinations(Data, N, List),
-  sum_list(List, 2020), !,
-  mul_list(List, Res).
+  length(Is, N),
+  length(Data, L),
+  L >= N,
+  Is ins 1..L,
+  all_distinct(Is),
+  maplist({Data}/[I,Out]>>(element(I, Data, Out)), Is, Xs),
+  sum(Xs, #=, 2020),
+  label(Xs), !,
+  mul_list(Xs, Res).
 
 part1(Data, Res) :- solve0(Data, 2, Res).
 part2(Data, Res) :- solve0(Data, 3, Res).
