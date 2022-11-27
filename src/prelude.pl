@@ -101,6 +101,13 @@ minus(A,B,C) :-
   -> B is A-C
   ;  C is A-B.
 
+times(A,B,C) :-
+      var(A)
+  ->  A is C/B
+  ;   var(B)
+  ->  B is C/A
+  ;   C is A*B.
+
 foldl1(Goal, [X|Xs], V) :-
   foldl(Goal, Xs, X, V).
 
