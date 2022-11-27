@@ -95,13 +95,11 @@ is_alpha(C) :- code_type(C, alpha).
 
 % util {{{
 minus(A,B,C) :-
-  (
      var(A)
   -> A is B+C
   ;  var(B)
   -> B is A-C
-  ;  C is A-B
-  ).
+  ;  C is A-B.
 
 foldl1(Goal, [X|Xs], V) :-
   foldl(Goal, Xs, X, V).
