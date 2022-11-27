@@ -6,6 +6,7 @@
 :- use_module(library(dcg/basics)).
 
 :- dynamic default_input/1.
+:- dynamic parse/3.
 input_from_file(File, Input) :- phrase_from_file(parse(Input), File).
 input_from_string(Codes, Input) :-
   is_list(Codes), !,
