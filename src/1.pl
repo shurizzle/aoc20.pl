@@ -42,9 +42,6 @@ solve0(Data, N, Res) :-
   label(Xs), !,
   mul_list(Xs, Res).
 
-foldl1(Goal, [X|Xs], V) :-
-  foldl(Goal, Xs, X, V).
-
 % unique values solution
 solve1(Data, N, Res) :-
   length(Data, L),

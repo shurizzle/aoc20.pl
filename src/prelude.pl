@@ -103,6 +103,9 @@ minus(A,B,C) :-
   ;  C is A-B
   ).
 
+foldl1(Goal, [X|Xs], V) :-
+  foldl(Goal, Xs, X, V).
+
 mul_list([], Res, Res).
 mul_list([X|Xs], Acc0, Res) :-
   Acc is Acc0 * X,
