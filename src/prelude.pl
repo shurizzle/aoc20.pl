@@ -111,10 +111,6 @@ times(A,B,C) :-
 foldl1(Goal, [X|Xs], V) :-
   foldl(Goal, Xs, X, V).
 
-mul_list([], Res, Res).
-mul_list([X|Xs], Acc0, Res) :-
-  Acc is Acc0 * X,
-  mul_list(Xs, Acc, Res).
-mul_list([X|Xs], Res) :-
-  mul_list(Xs, X, Res).
+mul_list(Xs, Res) :-
+  foldl1(times, Xs, Res).
 % }}}
