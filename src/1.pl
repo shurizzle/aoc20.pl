@@ -46,8 +46,8 @@ solve0(Data, N, Res) :-
 solve1(Data, N, Res) :-
   length(Data, L),
   L >= N,
-  maplist([X,X..X]>>(true), Data, Domains),
-  foldl1([A,B,A\/B]>>(true), Domains, Domain),
+  maplist([X,X..X]>>true, Data, Domains),
+  foldl1([A,B,A\/B]>>true, Domains, Domain),
   length(Xs, N),
   Xs ins Domain,
   all_distinct(Xs),
