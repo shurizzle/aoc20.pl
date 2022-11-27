@@ -34,18 +34,6 @@ line(Res) -->
   letters(P),
   { Res = (Start, Stop, C, P) }.
 
-filtercount(_, [], Count, Count) :- !.
-filtercount(Filter, [X|Xs], C0, Count) :-
-  (
-      call(Filter, X)
-  ->  C1 is C0+1
-  ;   C1 is C0
-  ),
-  filtercount(Filter, Xs, C1, Count).
-
-filtercount(Filter, List, Count) :-
-  filtercount(Filter, List, 0, Count).
-
 part1(Data, Res) :-
   filtercount([(R1, R2, C, S)]>>(
     string_chars(S, Cs),
