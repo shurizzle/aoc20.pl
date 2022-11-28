@@ -33,8 +33,7 @@ row(Res, (R,_), 0) --> !,
   col(Res, R, (0,7), 3).
 row(Res, Range0, Count0) -->
   [C],
-  { atom_char(AC, C),
-    row(AC, Mapper),
+  { row(C, Mapper),
     call(Mapper, Range0, Range),
     succ(Count, Count0) },
   row(Res, Range, Count).
@@ -43,16 +42,15 @@ col(Res, R, (C,_), 0, Rest, Rest) :- !,
   Res is R*8+C.
 col(Res, R, Range0, Count0) -->
   [C],
-  { atom_char(AC, C),
-    col(AC, Mapper),
+  { col(C, Mapper),
     call(Mapper, Range0, Range),
     succ(Count, Count0) },
   col(Res, R, Range, Count).
 
-row('F', lower_half).
-row('B', upper_half).
-col('L', lower_half).
-col('R', upper_half).
+row(0'F, lower_half).
+row(0'B, upper_half).
+col(0'L, lower_half).
+col(0'R, upper_half).
 
 lower_half((Min, Max), (Min, Max0)) :-
   Max0 is ((Max-Min) div 2)+Min.
