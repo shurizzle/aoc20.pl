@@ -2,6 +2,7 @@
 
 input_file("inputs/4.txt").
 
+% tests {{{
 tinput("ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
 
@@ -27,6 +28,7 @@ test2 :- tinput(Data), test2_from_string(Data).
 test(Data) :- test1(Data), test2(Data).
 test_from_string(Input) :- input_from_string(Input, Data), test(Data).
 test :- tinput(Input), test_from_string(Input).
+% }}}
 
 print1(Res) :- print(Res).
 print2(Res) :- print(Res).

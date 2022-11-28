@@ -14,6 +14,7 @@ if ! test -f "$FILE"; then
 
 input_file("inputs/$1.txt").
 
+% tests {{{
 tinput("").
 
 test1(Data) :- part1(Data, Res), print1(Res), nl.
@@ -27,6 +28,7 @@ test2 :- tinput(Data), test2_from_string(Data).
 test(Data) :- test1(Data), test2(Data).
 test_from_string(Input) :- input_from_string(Input, Data), test(Data).
 test :- tinput(Input), test_from_string(Input).
+% }}}
 
 print1(Res) :- print(Res).
 print2(Res) :- print(Res).

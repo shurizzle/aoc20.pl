@@ -2,7 +2,7 @@
 
 input_file("inputs/5.txt").
 
-% {{{
+% tests {{{
 tinput("FBFBBFFRLR
 BFFFBBFRRR
 FFFBBBFRRR
