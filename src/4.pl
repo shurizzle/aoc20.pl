@@ -77,13 +77,8 @@ minkey(hcl).
 minkey(ecl).
 minkey(pid).
 
-int(C) :-
-  between(0'0, 0'9, C).
-
-hex(C) :-
-  int(C);
-  between(0'a, 0'z, C);
-  between(0'A, 0'Z, C).
+int(C) :- code_type(C, digit(_)).
+hex(C) :- code_type(C, xdigit(_)).
 
 eye_color(amb).
 eye_color(blu).
