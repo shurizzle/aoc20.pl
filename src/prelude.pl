@@ -115,15 +115,6 @@ foldl1(Goal, [X|Xs], V) :-
 mul_list(Xs, Res) :-
   foldl1(times, Xs, Res).
 
-filtercount(_, [], Count, Count) :- !.
-filtercount(Filter, [X|Xs], C0, Count) :-
-  (
-      call(Filter, X)
-  ->  C1 is C0+1
-  ;   C1 is C0
-  ),
-  filtercount(Filter, Xs, C1, Count).
-
 filtercount(Filter, List, Count) :-
-  filtercount(Filter, List, 0, Count).
+  aggregate_all(count, (member(X, List), call(Filter, X)), Count).
 % }}}
