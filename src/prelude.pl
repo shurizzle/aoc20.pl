@@ -4,6 +4,7 @@
 :- use_module(library(apply)).
 :- use_module(library(pio)).
 :- use_module(library(dcg/basics)).
+:- use_module(library(ordsets)).
 
 :- dynamic default_input/1.
 :- dynamic parse/3.
@@ -78,6 +79,21 @@ list_of(Templ, Term0, Acc0, Res) -->
   { append(Acc0, [X], Acc) },
   list_of(Templ, Term0, Acc, Res).
 list_of(_, _, Res, Res, C, C).
+
+ordset_of(_, _, Res, [], []) :- !, list_to_ord_set([], Res).
+ordset_of(Templ, Term, Res) -->
+  { list_to_ord_set([], Acc) },
+  ordset_of(Templ, Term, Acc, Res).
+ordset_of(_, _, Res, Res) --> eos, !.
+ordset_of(Templ, Term0, Acc0, Res) -->
+  { copy_term_nat(Templ, X),
+    term_variables(Term0, Vars0),
+    exclude(==(Templ), Vars0, Vars),
+    copy_term(Templ^Vars^Term0, X^Vars^Term) },
+  call_dcg(Term), !,
+  { ord_add_element(Acc0, X, Acc) },
+  ordset_of(Templ, Term0, Acc, Res).
+ordset_of(_, _, Res, Res, C, C).
 
 parse_string(IsValid, Cs) -->
   parse_string_character(IsValid, C0), !,
