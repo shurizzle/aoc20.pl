@@ -65,16 +65,19 @@ raw_line(Fn) --> call(Fn), eol.
 trim_line(Fn) --> blanks, call(Fn), blanks, eos, !.
 trim_line(Fn) --> blanks, call(Fn), blanks_to_nl.
 
-list_of(_, _, []) --> eos, !.
-list_of(Templ, Term0, [X|Xs], Codes, Rest) :-
-  copy_term_nat(Templ, X),
-  term_variables(Term0, Vars0),
-  exclude(==(Templ), Vars0, Vars),
-  copy_term(Templ^Vars^Term0, X^Vars^Term),
-
-  call_dcg(Term, Codes, C0), !,
-  list_of(Templ, Term0, Xs, C0, Rest).
-list_of(_, _, []) --> [].
+list_of(_, _, [], [], []) :- !.
+list_of(Templ, Term, Res) -->
+  list_of(Templ, Term, [], Res).
+list_of(_, _, Res, Res) --> eos, !.
+list_of(Templ, Term0, Acc0, Res) -->
+  { copy_term_nat(Templ, X),
+    term_variables(Term0, Vars0),
+    exclude(==(Templ), Vars0, Vars),
+    copy_term(Templ^Vars^Term0, X^Vars^Term) },
+  call_dcg(Term), !,
+  { append(Acc0, [X], Acc) },
+  list_of(Templ, Term0, Acc, Res).
+list_of(_, _, Res, Res, C, C).
 
 parse_string(IsValid, Cs) -->
   parse_string_character(IsValid, C0), !,
