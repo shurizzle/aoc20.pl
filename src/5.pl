@@ -2,6 +2,7 @@
 
 input_file("inputs/5.txt").
 
+% {{{
 tinput("FBFBBFFRLR
 BFFFBBFRRR
 FFFBBBFRRR
@@ -18,6 +19,7 @@ test2 :- tinput(Data), test2_from_string(Data).
 test(Data) :- test1(Data), test2(Data).
 test_from_string(Input) :- input_from_string(Input, Data), test(Data).
 test :- tinput(Input), test_from_string(Input).
+% }}}
 
 print1(Res) :- print(Res).
 print2(Res) :- print(Res).
@@ -52,13 +54,11 @@ row('B', upper_half).
 col('L', lower_half).
 col('R', upper_half).
 
-lower_half((Min, Max), Res) :-
-  Max0 is ((Max-Min) div 2)+Min,
-  Res = (Min, Max0).
-upper_half((Min, Max), Res) :-
+lower_half((Min, Max), (Min, Max0)) :-
+  Max0 is ((Max-Min) div 2)+Min.
+upper_half((Min, Max), (Min1, Max)) :-
   lower_half((Min,Max), (_, Min0)),
-  Min1 is Min0+1,
-  Res = (Min1, Max).
+  Min1 is Min0+1.
 
 missing([Prev, Next|_], Res) :-
   succ(Prev, Res),
