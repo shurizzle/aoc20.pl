@@ -61,10 +61,10 @@ solution :- input(Data), solution_from_data(Data).
 % }}}
 
 % parsing {{{
-raw_line(Fn) --> call(Fn), eol.
+raw_line(Fn) --> call_dcg(Fn), eol.
 
-trim_line(Fn) --> blanks, call(Fn), blanks, eos, !.
-trim_line(Fn) --> blanks, call(Fn), blanks_to_nl.
+trim_line(Fn) --> blanks, call_dcg(Fn), blanks, eos, !.
+trim_line(Fn) --> blanks, call_dcg(Fn), blanks_to_nl.
 
 list_of(_, _, [], [], []) :- !.
 list_of(Templ, Term, Res) -->
