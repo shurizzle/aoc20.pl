@@ -3,7 +3,13 @@
 input_file("inputs/7.txt").
 
 % tests {{{
-tinput("").
+tinput("shiny gold bags contain 2 dark red bags.
+dark red bags contain 2 dark orange bags.
+dark orange bags contain 2 dark yellow bags.
+dark yellow bags contain 2 dark green bags.
+dark green bags contain 2 dark blue bags.
+dark blue bags contain 2 dark violet bags.
+dark violet bags contain no other bags.").
 
 test1(Data) :- part1(Data, Res), print1(Res), nl.
 test1_from_string(Input) :- input_from_string(Input, Data), test1(Data).
@@ -59,5 +65,28 @@ string_ends_with(Res, Acc0, End, [C|Codes], Rest) :-
   append(Acc0, [C], Acc),
   string_ends_with(Res, Acc, End, Codes, Rest).
 
-part1(Data, Res) :- nonvar(Data), var(Res).
-part2(Data, Res) :- nonvar(Data), var(Res).
+contains0(_, Res, Res).
+contains0(Data, Search, Res) :-
+  get_dict(K, Data, Vs),
+  get_dict(Search, Vs, _),
+  contains0(Data, K, Res).
+contains(Data, Search, Res) :-
+  aggregate_all(set(R), (
+    get_dict(K, Data, Vs),
+    get_dict(Search, Vs, _),
+    contains0(Data, K, R)
+  ), Res0),
+  length(Res0, Res).
+
+count_bags(Data, Search, Res) :-
+  get_dict(Search, Data, Bags), !,
+  dict_pairs(Bags, _, Pairs),
+  aggregate_all(sum(N), (
+    member(K-V, Pairs),
+    count_bags(Data, K, Sum),
+    N is Sum*V+V
+  ), Res).
+count_bags(_, _, 0).
+
+part1(Data, Res) :- contains(Data, 'shiny gold', Res).
+part2(Data, Res) :- count_bags(Data, 'shiny gold', Res).
