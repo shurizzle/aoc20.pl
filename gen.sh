@@ -4,9 +4,7 @@ BASE="$(dirname "$(readlink -f "$0")")"
 INPUT="$BASE/inputs/$1.txt"
 FILE="$BASE/src/$1.pl"
 
-if ! test -f "$INPUT"; then
-  touch "$INPUT"
-fi
+touch -f "$INPUT"
 
 if ! test -f "$FILE"; then
   cat <<EOF > "$FILE"
