@@ -52,10 +52,11 @@ solution_from_string(Str) :-
 solution_from_file(Str) :-
   input_from_string(Str, Data),
   solution_from_data(Data).
+:- dynamic solution_from_data/1.
 solution_from_data(Data) :-
   part1(Data, One),
-  part2(Data, Two),
   format("Solution1: "), print1(One), nl,
+  part2(Data, Two),
   format("Solution2: "), print2(Two), nl.
 solution :- input(Data), solution_from_data(Data).
 % }}}
