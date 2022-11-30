@@ -28,7 +28,7 @@ valid(Preamble, CombLen, X) :-
   length(Preamble, L),
   once((
     maplist(between(1, L), CombIs),
-    is_set(CombIs),
+    list_chain(CombIs, @>),
     maplist({Preamble}/[I,O]>>nth1(I, Preamble, O), CombIs, CombXs),
     sum_list(CombXs, X)
   )).

@@ -137,4 +137,9 @@ mul_list(Xs, Res) :-
 
 filtercount(Filter, List, Count) :-
   aggregate_all(count, (member(X, List), call(Filter, X)), Count).
+
+list_chain([X0,X1|Xs], Op) :-
+  call(Op, X0, X1),
+  list_chain([X1|Xs], Op).
+list_chain(L, _) :- is_list(L).
 % }}}
