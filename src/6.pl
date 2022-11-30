@@ -35,20 +35,6 @@ test :- tinput(Input), test_from_string(Input).
 print1(Res) :- print(Res).
 print2(Res) :- print(Res).
 
-parse(R) --> parse(R, []), blanks.
-parse(R, Gs0) -->
-  group(G), !,
-  { append(Gs0, [G], Gs) },
-  parse0(R, Gs).
-
-parse0(R, Gs0) -->
-  blanknonls, newline, blanknonls,
-  blanknonls, newline, blanknonls,
-  group(G), !,
-  { append(Gs0, [G], Gs) },
-  parse0(R, Gs).
-parse0(R, R) --> [].
-
 blanknonl --> [L], { \+ code_type(L, newline), code_type(L, space) }.
 blanknonls --> blanknonl, blanknonls.
 blanknonls --> [].
@@ -60,23 +46,15 @@ char(C) -->
     char_code(C1, C0),
     downcase_atom(C1, C) }.
 
-person(Cs) --> person(Cs, []).
-person(Res, Cs0) -->
-  blanknonls, char(C), !,
-  { append(Cs0, [C], Cs) },
-  person0(Res, Cs).
-person0(Res, Cs0) --> person(Res, Cs0), !.
-person0(Cs, Cs) --> [].
-
-group(Res) -->
-  person(P), group0(Res, [P]).
-
-group0(Res, Ps0) -->
-  blanknonls, newline, blanknonls,
-  person(P), !,
-  { append(Ps0, [P], Ps) },
-  group0(Res, Ps).
-group0(Ps, Ps) --> [].
+person(Cs) --> list_of(C, char(C), Cs), { length(Cs, L), L > 0 }.
+group(G) --> list_of(P, person(P), (blanknonls, newline, blanknonls), G).
+parse(Gs) -->
+  blanks,
+  list_of(G, group(G), (
+    blanknonls, newline, blanknonls,
+    blanknonls, newline, blanknonls
+  ), Gs),
+  blanks.
 
 part1(Data, Res) :-
   aggregate_all(sum(X),

@@ -1,5 +1,4 @@
 % boilerplate {{{
-
 :- use_module(library(lists)).
 :- use_module(library(apply)).
 :- use_module(library(pio)).
@@ -67,33 +66,55 @@ raw_line(Fn) --> call_dcg(Fn), eol.
 trim_line(Fn) --> blanks, call_dcg(Fn), blanks, eos, !.
 trim_line(Fn) --> blanks, call_dcg(Fn), blanks_to_nl.
 
+bind_template(Templ, Term0, Res, Term) :-
+  copy_term_nat(Templ, Res),
+  term_variables(Term0, Vars0),
+  exclude(==(Templ), Vars0, Vars),
+  copy_term(Templ^Vars^Term0, Res^Vars^Term).
+
+call_dcg_template(Templ, Term0, Res) -->
+  { bind_template(Templ, Term0, Res, Term) },
+  call_dcg(Term).
+
 list_of(_, _, [], [], []) :- !.
 list_of(Templ, Term, Res) -->
-  list_of(Templ, Term, [], Res).
-list_of(_, _, Res, Res) --> eos, !.
-list_of(Templ, Term0, Acc0, Res) -->
-  { copy_term_nat(Templ, X),
-    term_variables(Term0, Vars0),
-    exclude(==(Templ), Vars0, Vars),
-    copy_term(Templ^Vars^Term0, X^Vars^Term) },
-  call_dcg(Term), !,
+  list_of0(Templ, Term, [], Res).
+
+list_of(_, _, _, [], [], []) :- !.
+list_of(Templ, Term, Sep, Res) -->
+  list_of_sep(Templ, Term, Sep, [], Res).
+
+list_of0(_, _, Res, Res) --> eos, !.
+list_of0(Templ, Term, Acc0, Res) -->
+  call_dcg_template(Templ, Term, X), !,
   { append(Acc0, [X], Acc) },
-  list_of(Templ, Term0, Acc, Res).
-list_of(_, _, Res, Res, C, C).
+  list_of0(Templ, Term, Acc, Res).
+list_of0(_, _, Res, Res, C, C).
+
+list_of_sep(_, _, _, Res, Res) --> eos, !.
+list_of_sep(Templ, Term, Sep, Acc0, Res) -->
+  call_dcg_template(Templ, Term, X), !,
+  { append(Acc0, [X], Acc) },
+  list_of_sep0(Templ, Term, Sep, Acc, Res).
+list_of_sep(_, _, _, Res, Res, C, C).
+
+list_of_sep0(_, _, _, Res, Res) --> eos, !.
+list_of_sep0(Templ, Term, Sep, Acc0, Res) -->
+  call_dcg(Sep),
+  call_dcg_template(Templ, Term, X), !,
+  { append(Acc0, [X], Acc) },
+  list_of_sep0(Templ, Term, Sep, Acc, Res).
+list_of_sep0(_, _, _, Res, Res, C, C).
 
 ordset_of(_, _, Res, [], []) :- !, list_to_ord_set([], Res).
 ordset_of(Templ, Term, Res) -->
   { list_to_ord_set([], Acc) },
   ordset_of(Templ, Term, Acc, Res).
 ordset_of(_, _, Res, Res) --> eos, !.
-ordset_of(Templ, Term0, Acc0, Res) -->
-  { copy_term_nat(Templ, X),
-    term_variables(Term0, Vars0),
-    exclude(==(Templ), Vars0, Vars),
-    copy_term(Templ^Vars^Term0, X^Vars^Term) },
-  call_dcg(Term), !,
+ordset_of(Templ, Term, Acc0, Res) -->
+  call_dcg_template(Templ, Term, X), !,
   { ord_add_element(Acc0, X, Acc) },
-  ordset_of(Templ, Term0, Acc, Res).
+  ordset_of(Templ, Term, Acc, Res).
 ordset_of(_, _, Res, Res, C, C).
 
 parse_string(IsValid, Cs) -->

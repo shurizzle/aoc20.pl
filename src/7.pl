@@ -35,13 +35,9 @@ line(Name:Content) --> string_ends_with(Name, " bags contain "), content(Content
 
 content(#{}) --> "no other bags.", !.
 content(Res) -->
-  content0(KVs, []),
-  bag(KV), ".",
-  { dict_create(Res, #, [KV|KVs]) }.
-
-content0(Res, Acc) -->
-  bag(KV), ", ", !, content0(Res, [KV|Acc]).
-content0(Res, Res) --> [].
+  list_of(KV, bag(KV), ", ", KVs), ".",
+  { length(KVs, L), L > 0,
+    dict_create(Res, #, KVs) }.
 
 bag(Name:1) -->
   "1 ", string_ends_with(Name, " bag"), !.

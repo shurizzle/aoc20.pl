@@ -43,28 +43,17 @@ breaker --> blanknonls, newline, blanknonls, newline, blanknonls.
 spacer --> blanknonls, newline, !, blanknonls.
 spacer --> blanknonls.
 
-groups([G|Gs]) --> group(G), !, groups0(Gs).
-groups([]) --> [].
-
-groups0([G|Gs]) --> breaker, group(G), !, groups0(Gs).
-groups0([]) --> [].
-
-group(G) --> group0(Es), { dict_create(G, #, Es) }.
-
-group0([E|Es]) --> element(E), !, spacer, group1(Es).
-group0([]) --> [].
-
-group1([E|Es]) --> spacer, element(E), !, group1(Es).
-group1([]) --> [].
-
-element(K:V) --> key(K), ":", value(V).
-
-key(Name, Codes, Rest) :-
-  key(Name),
-  atom_codes(Name, Cs),
-  append(Cs, Rest, Codes).
-
+key(Name) -->
+  { key(Name),
+    atom_codes(Name, Cs) },
+  Cs.
 value(V) --> nonblanks(V0), { string_chars(V, V0) }.
+element(K:V) --> key(K), ":", value(V).
+group(G) -->
+  list_of(E, element(E), spacer, Es),
+  { length(Es, L), L > 0,
+    dict_create(G, #, Es) }.
+groups(Gs) --> list_of(G, group(G), breaker, Gs).
 
 key(cid).
 key(Name) :- minkey(Name).
