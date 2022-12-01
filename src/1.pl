@@ -36,7 +36,7 @@ solve0(Data, N, Res) :-
   length(Data, L),
   L >= N,
   Is ins 1..L,
-  all_distinct(Is),
+  chain(Is, #>),
   maplist({Data}/[I,Out]>>(element(I, Data, Out)), Is, Xs),
   sum(Xs, #=, 2020),
   label(Xs), !,
@@ -55,5 +55,5 @@ solve1(Data, N, Res) :-
   label(Xs), !,
   mul_list(Xs, Res).
 
-part1(Data, Res) :- solve1(Data, 2, Res).
-part2(Data, Res) :- solve1(Data, 3, Res).
+part1(Data, Res) :- solve0(Data, 2, Res).
+part2(Data, Res) :- solve0(Data, 3, Res).
